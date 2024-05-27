@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 23 mai 2024 à 08:53
+-- Généré le : lun. 27 mai 2024 à 18:36
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -104,11 +104,13 @@ CREATE TABLE `tache` (
 
 CREATE TABLE `utilisateur` (
   `id` int(11) NOT NULL,
-  `login` varchar(20) NOT NULL,
+  `mail` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `nom` varchar(100) NOT NULL,
   `prenom` varchar(100) NOT NULL,
   `profil` varchar(20) NOT NULL,
-  `equipe` varchar(20) DEFAULT NULL
+  `equipe` varchar(20) DEFAULT NULL,
+  `bloque` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -143,7 +145,7 @@ ALTER TABLE `tache`
 -- Index pour la table `utilisateur`
 --
 ALTER TABLE `utilisateur`
-  ADD PRIMARY KEY (`id`,`login`);
+  ADD PRIMARY KEY (`id`,`mail`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées

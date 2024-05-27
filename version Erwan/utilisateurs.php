@@ -7,7 +7,7 @@ if (!array_key_exists('login', $_SESSION) || $_SESSION['admin'] != 1) {
     exit();
 }
 
-$query = "SELECT * FROM utilisateur ORDER BY login";
+$query = "SELECT * FROM utilisateur ORDER BY mail ASC";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $utilisateurs = $stmt->fetchAll(PDO::FETCH_BOTH);
@@ -44,8 +44,8 @@ $utilisateurs = $stmt->fetchAll(PDO::FETCH_BOTH);
             <div>
                 <h2>Utilisateurs</h2>
                 <div class="row border-bottom d-flex align-items-center">
-                    <div class="col">
-                        Login
+                    <div class="col-4">
+                        Mail
                     </div>
                     <div class="col">
                         Identité
@@ -63,9 +63,9 @@ $utilisateurs = $stmt->fetchAll(PDO::FETCH_BOTH);
                     </div>
                 </div>
                 <?php foreach ($utilisateurs as $utilisateur) : ?>
-                    <div class="row d-flex align-items-center">
-                        <div class="col">
-                            <?php echo $utilisateur['login'] ?>
+                    <div class="row d-flex align-items-center mt-1">
+                        <div class="col-4">
+                            <?php echo $utilisateur['mail'] ?>
                         </div>
                         <div class="col">
                             <?php echo ($utilisateur['prenom'].' '.$utilisateur['nom']) ?>
@@ -84,14 +84,14 @@ $utilisateurs = $stmt->fetchAll(PDO::FETCH_BOTH);
                             <?php endif; ?>
                         </div>
                         <div class="col">
-                            <?php if ($_SESSION['login'] != $utilisateur['login']) : ?>
+                            <?php if ($_SESSION['login'] != $utilisateur['mail']) : ?>
                                 <?php if ($utilisateur['bloque'] == 1) : ?>
-                                    <a title="valider l'utilisateur" class="btn btn-success" href="validerUtilisateur.php?login=<?php echo $utilisateur['login'] ?>"><i class="las la-check"></i></a>
+                                    <a title="valider l'utilisateur" class="btn btn-sm btn-success" href="validerUtilisateur.php?mail=<?php echo $utilisateur['mail'] ?>"><i class="las la-check"></i></a>
                                 <?php else : ?>
-                                    <a title="bloquer l'utilisateur" class="btn btn-danger" href="bloquerUtilisateur.php?login=<?php echo $utilisateur['login'] ?>"><i class="las la-ban"></i></a>
+                                    <a title="bloquer l'utilisateur" class="btn btn-sm btn-danger" href="bloquerUtilisateur.php?mail=<?php echo $utilisateur['mail'] ?>"><i class="las la-ban"></i></a>
                                 <?php endif; ?>
-                                <a title="modifier l'utilisateur" class="btn btn-light" href="modifierUtilisateur.php?login=<?php echo $utilisateur['login'] ?>"><i class="las la-pen"></i></a>
-                                <a title="supprimer l'utilisateur" class="btn btn-danger" href="supprimerUtilisateur.php?login=<?php echo $utilisateur['login'] ?>"><i class="las la-trash"></i></a>
+                                <a title="modifier l'utilisateur" class="btn btn-sm btn-light" href="modifierUtilisateur.php?mail=<?php echo $utilisateur['mail'] ?>"><i class="las la-pen"></i></a>
+                                <a title="supprimer l'utilisateur" class="btn btn-sm btn-danger" href="supprimerUtilisateur.php?mail=<?php echo $utilisateur['mail'] ?>"><i class="las la-trash"></i></a>
                             <?php endif; ?>
                         </div>
                     </div>

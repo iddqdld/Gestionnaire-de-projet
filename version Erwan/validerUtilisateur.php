@@ -8,11 +8,11 @@ if (!array_key_exists('login', $_SESSION) || $_SESSION['admin'] != 1) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $login = $_GET["login"];
+    $mail = $_GET["mail"];
 
-    $query = "SELECT * FROM utilisateur WHERE login = :username";
+    $query = "SELECT * FROM utilisateur WHERE mail = :mail";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':username', $login, PDO::PARAM_STR);
+    $stmt->bindParam(':mail', $mail, PDO::PARAM_STR);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -21,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit();
     }
 
-    $query = "UPDATE utilisateur SET bloque = 0 WHERE login = :username";
+    $query = "UPDATE utilisateur SET bloque = 0 WHERE mail = :mail";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':username', $login, PDO::PARAM_STR);
+    $stmt->bindParam(':mail', $mail, PDO::PARAM_STR);
     $stmt->execute();
 
     header('Location: utilisateurs.php');

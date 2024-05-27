@@ -8,11 +8,11 @@ if (!array_key_exists('login', $_SESSION) || $_SESSION['admin'] != 1) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $login = $_GET["login"];
+    $mail = $_GET["mail"];
 
-    $query = "SELECT * FROM utilisateur WHERE login = :username";
+    $query = "SELECT * FROM utilisateur WHERE mail = :mail";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':username', $login, PDO::PARAM_STR);
+    $stmt->bindParam(':mail', $mail, PDO::PARAM_STR);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
+    $mail = $_POST['mail'];
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
     $profil = $_POST['profil'];
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérifiez les informations d'identification dans la base de données
     $query = "UPDATE utilisateur SET nom = :nom, prenom = :prenom, profil = :profil, equipe = :equipe WHERE login = :username";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+    $stmt->bindParam(':mail', $mail, PDO::PARAM_STR);
     $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
     $stmt->bindParam(':prenom', $prenom, PDO::PARAM_STR);
     $stmt->bindParam(':profil', $profil, PDO::PARAM_STR);
@@ -80,9 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endif; ?>
                         <form method="post" action="modifierUtilisateur.php">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>  
-                                <input type="text" name="username_affiche" class="form-control" disabled aria-describedby="username" value="<?php echo $login ?>">
-                                <input type="hidden" name="username" class="form-control" id="username" aria-describedby="username" value="<?php echo $login ?>">
+                                <label for="mail" class="form-label">Mail</label>
+                                <input type="text" name="mail_affiche" class="form-control" disabled aria-describedby="mail" value="<?php echo $mail ?>">
+                                <input type="hidden" name="mail" class="form-control" id="mail" aria-describedby="mail" value="<?php echo $mail ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="nom" class="form-label">Nom</label>
@@ -100,7 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label for="equipe" class="form-label">Equipe</label>
                                 <input type="text" name="equipe" required class="form-control" id="equipe" value="<?php echo $user['equipe'] ?>">
                             </div>
-                            <button type="submit" class="btn btn-primary">Modifier l'utilisateur</button> 
+                            <button type="submit" class="btn btn-primary">Modifier l'utilisateur</button>
+                            <a class="btn btn-light" href="utilisateurs.php">Annuler</a>
                         </form>
                     </div>
                 </div>

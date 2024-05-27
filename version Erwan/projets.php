@@ -38,7 +38,7 @@ $projets = $stmt->fetchAll(PDO::FETCH_BOTH);
 
             <div>
                 <h2>Projets</h2>
-                <div>
+                <div class="mt-2">
                     <a class="btn btn-primary" href="creerProjet.php"><i class="las la-plus"></i> Nouveau Projet</a>
                 </div>
                 <?php if (count($projets) == 0) : ?>
@@ -99,8 +99,8 @@ $projets = $stmt->fetchAll(PDO::FETCH_BOTH);
                                 <?php echo $projet['priorite'] ?>
                             </div>
                             <div class="col">
-                                <a title="modifier le projet" class="btn btn-light" href="modifierProjet.php?projet=<?php echo $projet['id'] ?>"><i class="las la-pen"></i></a>
-                                <a title="supprimer le projet" class="btn btn-danger" href="supprimerProjet.php?projet=<?php echo $projet['id'] ?>"><i class="las la-trash"></i></a>
+                                <a title="modifier le projet" class="btn btn-sm btn-light" href="modifierProjet.php?projet=<?php echo $projet['id'] ?>"><i class="las la-pen"></i></a>
+                                <a title="supprimer le projet" class="btn btn-sm btn-danger" href="supprimerProjet.php?projet=<?php echo $projet['id'] ?>"><i class="las la-trash"></i></a>
                             </div>
                         </div>
                     <?php endforeach; ?>
