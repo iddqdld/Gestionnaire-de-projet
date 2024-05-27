@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit();
     }
 
-    $query = "SELECT * FROM utilisateur ORDER BY login";
+    $query = "SELECT * FROM utilisateur ORDER BY mail ASC";
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     $utilisateurs = $stmt->fetchAll(PDO::FETCH_BOTH);
@@ -41,21 +41,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $budget = $_POST['budget'];
     $priorite = $_POST['priorite'];
 
-    // Vérifiez les informations d'identification dans la base de données
-    $query = "UPDATE projet SET titre=:titre,description=:description,date_debut=:date_debut,date_fin_prevue=:date_fin_prevue,responsable=:responsable,client=:client,budget=:budget,priorite=:priorite WHERE id=:idProjet";
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
-    $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
-    $stmt->bindParam(':description', $description, PDO::PARAM_STR);
-    $stmt->bindParam(':date_debut', $dateDebut, PDO::PARAM_STR);
-    $stmt->bindParam(':date_fin_prevue', $dateFinPrevue, PDO::PARAM_STR);
-    $stmt->bindParam(':responsable', $responsable, PDO::PARAM_INT);
-    $stmt->bindParam(':client', $client, PDO::PARAM_STR);
-    $stmt->bindParam(':budget', $budget, PDO::PARAM_STR);
-    $stmt->bindParam(':priorite', $priorite, PDO::PARAM_INT);
-    $stmt->execute();
-    header('Location: projets.php');
-    exit();
+//    var_dump($dateDebut, $dateFinPrevue);exit;
+
+    if (strtotime($dateDebut) >= strtotime($dateFinPrevue)) {
+        $error_message = 'la date de fin prévue doit être postérieure à la date de début';
+    } else {
+        $query = "UPDATE projet SET titre=:titre,description=:description,date_debut=:date_debut,date_fin_prevue=:date_fin_prevue,responsable=:responsable,client=:client,budget=:budget,priorite=:priorite WHERE id=:idProjet";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
+        $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
+        $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+        $stmt->bindParam(':date_debut', $dateDebut, PDO::PARAM_STR);
+        $stmt->bindParam(':date_fin_prevue', $dateFinPrevue, PDO::PARAM_STR);
+        $stmt->bindParam(':responsable', $responsable, PDO::PARAM_INT);
+        $stmt->bindParam(':client', $client, PDO::PARAM_STR);
+        $stmt->bindParam(':budget', $budget, PDO::PARAM_STR);
+        $stmt->bindParam(':priorite', $priorite, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $query = "SELECT * FROM tache WHERE projet_id = :idProjet";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
+        $stmt->execute();
+        $taches = $stmt->fetchAll(PDO::FETCH_BOTH);
+    
+        $dateMin = null;
+        $dateMax = null;
+        foreach ($taches as $tache) {
+            if ($dateMin == null || $dateMin > strtotime($tache['date_debut'])) {
+                $dateMin = strtotime($tache['date_debut']);
+            }
+        if ($dateMax == null || $dateMax < strtotime($tache['date_fin_prevue'])) {
+                $dateMax = strtotime($tache['date_fin_prevue']);
+            }
+        }
+
+        if ($dateMin != null) {
+            $query = "UPDATE projet SET date_debut = :date_debut WHERE id = :idProjet";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
+            $stmt->bindParam(':date_debut', date('Y-m-d', $dateMin), PDO::PARAM_STR);
+            $stmt->execute();
+        }
+        if ($dateMax != null) {
+            $query = "UPDATE projet SET date_fin_prevue = :date_fin_prevue WHERE id = :idProjet";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
+            $stmt->bindParam(':date_fin_prevue', date('Y-m-d', $dateMax), PDO::PARAM_STR);
+            $stmt->execute();
+        }
+
+        $location = 'projet.php?projet='.$idProjet;
+        header('Location: '.$location);
+        exit();
+    }
 }
 ?>
 
@@ -65,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Modifcation Projet</title>
+        <title>Modification Projet</title>
 
         <!-- line awesome cdn link  -->
         <link rel="stylesheet" href="line-awesome-1.3.0/css/line-awesome.min.css">
@@ -93,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if (isset($error_message)) : ?>
                 <p class="text-danger"><?php echo $error_message; ?></p>
             <?php endif; ?>
-            <form method="post" action="modifierProjet.php">
+            <form method="post" action="">
                 <input type="hidden" name="id" class="form-control" aria-describedby="idProjet" value="<?php echo $idProjet ?>">
                 <div class="mb-3">
                     <label for="titre" class="form-label">Titre</label>  
@@ -137,6 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Modifier le projet</button> 
+                <a class="btn btn-light" href="projet.php?projet=<?php echo $projet['id'] ?>">Annuler</button> 
             </form>
         </main>
         <script>

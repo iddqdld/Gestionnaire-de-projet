@@ -7,24 +7,24 @@ if (!array_key_exists('login', $_SESSION)) {
     exit();
 }
 
-$query = "SELECT * FROM utilisateur WHERE login = :username";
+$query = "SELECT * FROM utilisateur WHERE mail = :mail";
 $stmt = $pdo->prepare($query);
-$stmt->bindParam(':username', $_SESSION['login'], PDO::PARAM_STR);
+$stmt->bindParam(':mail', $_SESSION['login'], PDO::PARAM_STR);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_SESSION['login'];
+    $mail = $_SESSION['login'];
     $ancienPassword = $_POST['ancien_password'];
     $password = $_POST['password'];
     $confirmationPassword = $_POST['confirmation_password'];
     $passwordSha256 = hash('sha256', $ancienPassword);
 
     // Vérifiez les informations d'identification dans la base de données
-    $query = "SELECT * FROM utilisateur WHERE login = :username AND password = :password";
+    $query = "SELECT * FROM utilisateur WHERE mail = :mail AND password = :password";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':username', $_SESSION['login'], PDO::PARAM_STR);
+    $stmt->bindParam(':mail', $_SESSION['login'], PDO::PARAM_STR);
     $stmt->bindParam(':password', $passwordSha256, PDO::PARAM_STR);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -34,9 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $error_message = null;
             $passwordSha256 = hash('sha256', $password);
-            $query = "UPDATE utilisateur SET password = :password WHERE login = :username";
+            $query = "UPDATE utilisateur SET password = :password WHERE mail = :mail";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':username', $_SESSION['login'], PDO::PARAM_STR);
+            $stmt->bindParam(':mail', $_SESSION['login'], PDO::PARAM_STR);
             $stmt->bindParam(':password', $passwordSha256, PDO::PARAM_STR);
             $stmt->execute();
             header('Location: index.php');
@@ -87,8 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endif; ?>
                         <form method="post" action="changerMotPasse.php">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>  
-                                <input type="text" name="username" class="form-control" disabled id="username" aria-describedby="username" value="<?php echo $_SESSION['login'] ?>">
+                                <label for="mail" class="form-label">Username</label>
+                                <input type="text" name="mail" class="form-control" disabled id="mail" aria-describedby="username" value="<?php echo $_SESSION['login'] ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="ancien_password" class="form-label">Ancien mot de passe</label>
@@ -102,7 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label for="confirmation_password" class="form-label">Confirmation nouveau mot de passe</label>
                                 <input type="password" name="confirmation_password" required class="form-control" id="confirmation_password">
                             </div>
-                            <button type="submit" class="btn btn-primary">Changer le mot de passe</button> 
+                            <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+                            <a class="btn btn-light" href="index.php">Annuler</a>
                         </form>
                     </div>
                 </div>

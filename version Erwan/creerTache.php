@@ -7,49 +7,81 @@ if (!array_key_exists('login', $_SESSION)) {
     exit();
 }
 
-$query = "SELECT * FROM utilisateur ORDER BY mail ASC";
+$idProjet = $_GET["projet"];
+
+$query = "SELECT * FROM projet WHERE id = :idProjet";
 $stmt = $pdo->prepare($query);
+$stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
 $stmt->execute();
-$utilisateurs = $stmt->fetchAll(PDO::FETCH_BOTH);
+$projet = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($projet == null) {
+    header('Location: projets.php');
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $titre = $_POST['titre'];
+    $idProjet = $_POST['projet_id'];
     $description = $_POST['description'];
     $dateDebut = $_POST['date_debut'];
     $dateFinPrevue = $_POST['date_fin_prevue'];
-    $responsable = $_POST['responsable'];
-    $client = $_POST['client'];
-    $budget = $_POST['budget'];
-    $priorite = $_POST['priorite'];
+    $statut = $_POST['statut'];
 
-    if (strtotime($dateDebut) >= strtotime($dateFinPrevue)) {
-        $error_message = 'la date de fin prévue doit être postérieure à la date de début';
-    } else {
+    // Vérifiez les informations d'identification dans la base de données
+    $query = "INSERT INTO tache(projet_id,description,date_debut,date_fin_prevue,statut) VALUES(:idProjet,:description,:date_debut,:date_fin_prevue,:statut)";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
+    $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+    $stmt->bindParam(':date_debut', $dateDebut, PDO::PARAM_STR);
+    $stmt->bindParam(':date_fin_prevue', $dateFinPrevue, PDO::PARAM_STR);
+    $stmt->bindParam(':statut', $statut, PDO::PARAM_INT);
+    $stmt->execute();
 
-        $query = "INSERT INTO projet(titre,description,date_debut,date_fin_prevue,responsable,client,budget,priorite) VALUES(:titre,:description,:date_debut,:date_fin_prevue,:responsable,:client,:budget,:priorite)";
-        $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
-        $stmt->bindParam(':description', $description, PDO::PARAM_STR);
-        $stmt->bindParam(':date_debut', $dateDebut, PDO::PARAM_STR);
-        $stmt->bindParam(':date_fin_prevue', $dateFinPrevue, PDO::PARAM_STR);
-        $stmt->bindParam(':responsable', $responsable, PDO::PARAM_INT);
-        $stmt->bindParam(':client', $client, PDO::PARAM_STR);
-        $stmt->bindParam(':budget', $budget, PDO::PARAM_STR);
-        $stmt->bindParam(':priorite', $priorite, PDO::PARAM_INT);
-        $stmt->execute();
-        header('Location: projets.php');
-        exit();
+    $query = "SELECT * FROM tache WHERE projet_id = :idProjet";
+    $stmt = $pdo->prepare($query);
+    $stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
+    $stmt->execute();
+    $taches = $stmt->fetchAll(PDO::FETCH_BOTH);
+
+    $dateMin = null;
+    $dateMax = null;
+    foreach ($taches as $tache) {
+        if ($dateMin == null || $dateMin > strtotime($tache['date_debut'])) {
+            $dateMin = strtotime($tache['date_debut']);
+        }
+    if ($dateMax == null || $dateMax < strtotime($tache['date_fin_prevue'])) {
+            $dateMax = strtotime($tache['date_fin_prevue']);
+        }
     }
+
+    if ($dateMin != null) {
+        $query = "UPDATE projet SET date_debut = :date_debut WHERE id = :idProjet";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
+        $stmt->bindParam(':date_debut', date('Y-m-d', $dateMin), PDO::PARAM_STR);
+        $stmt->execute();
+    }
+    if ($dateMax != null) {
+        $query = "UPDATE projet SET date_fin_prevue = :date_fin_prevue WHERE id = :idProjet";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':idProjet', $idProjet, PDO::PARAM_STR);
+        $stmt->bindParam(':date_fin_prevue', date('Y-m-d', $dateMax), PDO::PARAM_STR);
+        $stmt->execute();
+    }
+    $location = 'taches.php?projet='.$projet['id'];
+    header('Location: '.$location);
+    exit();
 }
 ?>
 
 <!DOCTYPE html>
+
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Création Projet</title>
+        <title>Création tâche</title>
 
         <!-- line awesome cdn link  -->
         <link rel="stylesheet" href="line-awesome-1.3.0/css/line-awesome.min.css">
@@ -73,15 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </nav>
         <main class="container">
 
-            <h2>Création d'un projet</h2>
+            <h2>Création d'une tâche pour le projet : <?php echo $projet['titre'] ?></h2>
             <?php if (isset($error_message)) : ?>
                 <p class="text-danger"><?php echo $error_message; ?></p>
             <?php endif; ?>
             <form method="post" action="">
-                <div class="mb-3">
-                    <label for="titre" class="form-label">Titre</label>  
-                    <input type="text" name="titre" class="form-control" aria-describedby="titre">
-                </div>
+                <input type="hidden" name="projet_id" required class="form-control" value="<?php echo $projet['id'] ?>">
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea name="description" required class="form-control" id="description"></textarea>
@@ -95,32 +124,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" name="date_fin_prevue" class="form-control" id="date_fin_prevue">
                 </div>
                 <div class="mb-3">
-                    <label for="responsable" class="form-label">Responsable</label>
-                    <select class="form-select" name="responsable" id="responsable">
-                        <option selected value="0">sélectionner un responsable</option>
-                        <?php foreach ($utilisateurs as $utilisateur) : ?>
-                            <option value="<?php echo $utilisateur['id']?>"><?php echo $utilisateur['mail'] ?></option>
-                        <?php endforeach; ?>
+                    <label for="statut" class="form-label">Statut</label>
+                    <select class="form-select" name="statut" aria-label="statut">
+                        <option selected>Sélectionner un statut</option>
+                        <option value="1">Initialisée</option>
+                        <option value="2">En cours</option>
+                        <option value="3">Terminé</option>
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label for="client" class="form-label">Client</label>
-                    <input type="text" name="client" class="form-control" id="client">
-                </div>
-                <div class="mb-3">
-                    <label for="budget" class="form-label">Budget</label>
-                    <input type="text" name="budget" class="form-control" id="budget">
-                </div>
-                <div class="mb-3">
-                    <label for="priorite" class="form-label">Priorite</label>
-                    <select class="form-select" name="priorite" aria-label="priorite">
-                        <option selected>Sélectionner une priorité</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Créer le projet</button> 
-                <a class="btn btn-light" href="projets.php">Annuler</button> 
+                <button type="submit" class="btn btn-primary">Créer la tâche</button> 
+                <a class="btn btn-light" href="taches.php?projet=<?php echo $projet['id'] ?>">Annuler</button> 
             </form>
         </main>
         <script>

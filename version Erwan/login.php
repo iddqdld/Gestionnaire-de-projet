@@ -8,14 +8,14 @@ if (array_key_exists('login', $_SESSION)) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
+    $mail = $_POST['mail'];
     $password = $_POST['password'];
     $passwordSha256 = hash('sha256', $password);
 
     // Vérifiez les informations d'identification dans la base de données
-    $query = "SELECT * FROM utilisateur WHERE login = :username AND password = :password";
+    $query = "SELECT * FROM utilisateur WHERE mail = :mail AND password = :password";
     $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+    $stmt->bindParam(':mail', $mail, PDO::PARAM_STR);
     $stmt->bindParam(':password', $passwordSha256, PDO::PARAM_STR);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user['bloque'] == 1) {
             $error_message = 'Le compte est bloqué';
         } else {
-            $_SESSION['login'] = $user['login'];
+            $_SESSION['login'] = $user['mail'];
             $_SESSION['admin'] = 0;
             if ($user['profil'] == 'administrateur') {
                 $_SESSION['admin'] = 1;
@@ -75,13 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <p class="text-danger"><?php echo $error_message; ?></p>
                         <?php endif; ?>
                         <div>
-                            Pas encore inscrit ? <a href="sinscrire.php">S'inscrire</a>
+                            Pas encore inscrit ? <a href="inscription.php">S'inscrire</a>
                         </div>
 
                         <form method="post" action="login.php">
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>  
-                                <input type="text" name="username" required class="form-control" id="username" aria-describedby="username">
+                                <label for="mail" class="form-label">Email</label>
+                                <input type="text" name="mail" required class="form-control" id="mail" aria-describedby="username">
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Mot de passe</label>
