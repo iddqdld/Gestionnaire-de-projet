@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouveau Projet - Gestion de Projets</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Nouveau Projet</h1>
+        <nav>
+            <ul>
+                <li><a href="tableau bord.html">Retour</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <form action="/create-project" method="POST">
+            <label for="titre">Titre :</label>
+            <input type="text" id="titre" name="titre" required>
+            <label for="description">Description :</label>
+            <textarea id="description" name="description" required></textarea>
+            <label for="date_debut">Date de début :</label>
+            <input type="date" id="date_debut" name="date_debut" required>
+            <label for="date_fin">Date de fin :</label>
+            <input type="date" id="date_fin" name="date_fin" required>
+            <label for="budget">Budget :</label>
+            <input type="number" id="budget" name="budget" required>
+            <label for="responsable">Responsable :</label>
+            <select id="responsable" name="responsable">
+                <!-- Options des utilisateurs responsables -->
+            </select>
+            <p>
+                <input type="file" id="monFichier" name="monFichier">
+            </p>
+            <button onclick="afficherNomFichier()">Afficher le nom du fichier</button>
+            <button type="submit">Créer</button>
+        </form>
+    </main>
+
+</body>
+
+<script>
+    function afficherNomFichier() {
+        var inputFichier = document.getElementById('monFichier');
+        alert('Vous avez sélectionné : ' + inputFichier.files[0].name);
+    }
+</script>
+
+</html>

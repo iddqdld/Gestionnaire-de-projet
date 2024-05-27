@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de la Tâche - Gestion de Projets</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Détails de la Tâche</h1>
+        <nav>
+            <ul>
+                <li><a href="tableau bord.html">Retour</a></li>
+                <li><a href="creation taches.html">Modifier</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="profile-container">
+        <section class="task-details">
+            <h2>Nom de la Tâche</h2>
+            <p>Description de la tâche...</p>
+            <p><strong>Date de début :</strong> Date</p>
+            <p><strong>Date de fin :</strong> Date</p>
+            <p><strong>Statut :</strong> Statut</p>
+            <p><strong>Assigné à :</strong> Utilisateur</p>
+            <h3>Commentaires</h3>
+            <div class="comment-list">
+                <!-- Liste des commentaires -->
+            </div>
+            <form action="/add-comment" method="POST">
+                <label for="comment">Ajouter Commentaire </label>
+            </form>
+        </section>
+    </div>
+    </main>
+
+</body>
+</html>

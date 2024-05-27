@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Gestion de Projets</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Tableau de Bord</h1>
+        <nav>
+            <ul>
+                <li><a href="detail projet.html">Projets</a></li>
+                <li><a href="detail tache.html">Tâches</a></li>
+                <li><a href="profile.html">Profil</a></li>
+                <li><a href="page co.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="profile-container">
+        <section class="project-overview">
+            <h2>Mes Projets</h2>
+            <button onclick="window.location.href='creation projet.html'">Nouveau Projet</button>
+            <div class="project-list">
+                <!-- Liste des projets -->
+            </div>
+        </section>
+
+        <section class="task-overview">
+            <h2>Mes Tâches</h2>
+            <button onclick="window.location.href='creation taches.html'">Nouvelle Tâche</button>
+            <div class="task-list">
+                <!-- Liste des tâches -->
+            </div>
+        </section>
+        </div>
+    </main>
+
+</body>
+</html>

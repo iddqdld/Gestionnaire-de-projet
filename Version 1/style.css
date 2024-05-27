@@ -1,0 +1,229 @@
+/* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Body and General Styling */
+body {
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
+    margin: 0;
+}
+
+header {
+    background: #0066cc;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    border-bottom: 4px solid #005bb5;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ffdd57;
+}
+
+/* Containers */
+.login-container, .project-container, .task-container, .profile-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 1rem;
+    color: #0066cc;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="date"],
+form input[type="number"],
+form textarea,
+form select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="password"]:focus,
+form input[type="date"]:focus,
+form input[type="number"]:focus,
+form textarea:focus,
+form select:focus {
+    border-color: #0066cc;
+    outline: none;
+}
+
+form button {
+    background: #0066cc;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+form button:hover {
+    background: #005bb5;
+    transform: scale(1.05);
+}
+
+/* Dashboard and Project Details */
+.project-overview, .task-overview {
+    background: #fff;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.project-overview h2, .task-overview h2 {
+    margin-bottom: 1rem;
+}
+
+.project-list, .task-list {
+    list-style: none;
+    padding: 0;
+}
+
+.project-list li, .task-list li {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.3s;
+}
+
+.project-list li:hover, .task-list li:hover {
+    background: #f9f9f9;
+}
+
+.project-list li:last-child, .task-list li:last-child {
+    border-bottom: none;
+}
+
+.project-list li a, .task-list li a {
+    color: #0066cc;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.project-list li a:hover, .task-list li a:hover {
+    color: #ffdd57;
+}
+
+/* Comments */
+.comment-list {
+    margin-top: 2rem;
+}
+
+.comment-list div {
+    background: #f9f9f9;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+.comment-list div p {
+    margin-bottom: 0.5rem;
+}
+
+.comment-list div span {
+    display: block;
+    font-size: 0.875rem;
+    color: #777;
+}
+
+/* Profile Specific Styling */
+.profile-container h2 {
+    margin-bottom: 1rem;
+}
+
+form input[readonly] {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* Buttons Styling */
+button {
+    display: inline-block;
+    margin-top: 1rem;
+    background: #0066cc;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background: #005bb5;
+    transform: scale(1.05);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    nav ul li {
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    .login-container, .project-container, .task-container, .profile-container {
+        width: 90%;
+        padding: 1rem;
+    }
+
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="password"],
+    form input[type="date"],
+    form input[type="number"],
+    form textarea,
+    form select {
+        padding: 0.5rem;
+    }
+}

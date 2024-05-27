@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Gestion de Projets</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Mon Profil</h1>
+        <nav>
+            <ul>
+                <li><a href="tableau bord.html">Tableau de Bord</a></li>
+                <li><a href="page co.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="profile-container">
+            <h2>Informations du Profil</h2>
+            <form action="/update-profile" method="POST">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" value="Dupont" required>
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" value="Jean" required>
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" value="jean.dupont@example.com" required>
+                <label for="mot_de_passe">Mot de passe :</label>
+                <input type="password" id="mot_de_passe" name="mot_de_passe">
+                <label for="role">Rôle :</label>
+                <input type="text" id="role" name="role" value="Responsable de Projet" readonly>
+                <button type="submit">Mettre à jour</button>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>

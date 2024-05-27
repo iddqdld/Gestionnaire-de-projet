@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle Tâche - Gestion de Projets</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Nouvelle Tâche</h1>
+        <nav>
+            <ul>
+                <li><a href="tableau bord.html">Retour</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <form action="/create-task" method="POST">
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" required>
+            <label for="description">Description :</label>
+            <textarea id="description" name="description" required></textarea>
+            <label for="date_debut">Date de début :</label>
+            <input type="date" id="date_debut" name="date_debut" required>
+            <label for="date_fin">Date de fin :</label>
+            <input type="date" id="date_fin" name="date_fin" required>
+            <label for="statut">Statut :</label>
+            <select id="statut" name="statut">
+                <option value="A faire">À faire</option>
+                <option value="En cours">En cours</option>
+                <option value="Terminé">Terminé</option>
+            </select>
+            <label for="assigne">Assigné à :</label>
+            <select id="assigne" name="assigne">
+                <!-- Options des utilisateurs -->
+            </select>
+            <p>
+                <input type="file" id="monFichier" name="monFichier">
+            </p>
+            <button onclick="afficherNomFichier()">Afficher le nom du fichier</button>
+            <button type="submit">Créer</button>
+        </form>
+    </main>
+
+</body>
+
+<script>
+    function afficherNomFichier() {
+        var inputFichier = document.getElementById('monFichier');
+        alert('Vous avez sélectionné : ' + inputFichier.files[0].name);
+    }
+</script>
+
+</html>
