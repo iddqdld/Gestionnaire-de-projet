@@ -61,7 +61,7 @@ foreach ($taches as $tache) {
         <link rel="stylesheet" href="jquery-ui-bootstrap-jquery-ui-bootstrap-71f2e47/css/custom-theme/jquery-ui-1.9.2.custom.css">
 
         <script src="js/jquery-3.7.1.min.js"></script>
-        <script src="bootstrap-5.0.2-dist/js/bootstrap.js"></script>
+        <script src="bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
         <script src="jquery-ui-bootstrap-jquery-ui-bootstrap-71f2e47/js/jquery-ui-1.9.2.custom.min.js"></script>
         <script>
             $(function(){
@@ -129,7 +129,7 @@ foreach ($taches as $tache) {
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="contribution<?php echo $tache['id'] ?>">
                                                 <?php foreach ($contributions[$tache['id']] as $contribution) : ?>
-                                                    <li><a title="supprimer la contribution" class="dropdown-item" href="supprimerContribution?tache=<?php echo $contribution['tache_id'] ?>&utilisateur=<?php echo $contribution['utilisateur_id'] ?>">test</a></li>
+                                                    <li><a title="supprimer la contribution" class="dropdown-item" href="supprimerContribution.php?tache=<?php echo $contribution['tache_id'] ?>&utilisateur=<?php echo $contribution['utilisateur_id'] ?>"><?php echo $utilisateurs[$contribution['utilisateur_id']]['prenom'].' '.$utilisateurs[$contribution['utilisateur_id']]['nom'].' ('.$contribution['role'].')' ?></a></li>
                                                 <?php endforeach; ?>
                                             </ul>
                                         </div>

@@ -39,18 +39,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $role = $_POST['role'];
     $permission = $_POST['permission'];
 
-    // Vérifiez les informations d'identification dans la base de données
-    $query = "INSERT INTO contribution(tache_id,utilisateur_id,role,permission) VALUES(:idTache,:idUtilisateur,:role,:permission)";
+    $query = "SELECT * FROM contribution WHERE tache_id = :idTache AND utilisateur_id = :idUtilisateur";
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':idTache', $idTache, PDO::PARAM_STR);
     $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
-    $stmt->bindParam(':role', $role, PDO::PARAM_STR);
-    $stmt->bindParam(':permission', $permission, PDO::PARAM_STR);
     $stmt->execute();
+    $contributions = $stmt->fetchAll(PDO::FETCH_BOTH);
 
-    $location = 'taches.php?projet='.$idProjet;
-    header('Location: '.$location);
-    exit();
+    if (count($contributions) > 0) {
+        $error_message = 'une contribution à cette tâche avec cet utilisateur existe déjà';
+    } else {
+
+        $query = "INSERT INTO contribution(tache_id,utilisateur_id,role,permission) VALUES(:idTache,:idUtilisateur,:role,:permission)";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':idTache', $idTache, PDO::PARAM_STR);
+        $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        $stmt->bindParam(':role', $role, PDO::PARAM_STR);
+        $stmt->bindParam(':permission', $permission, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $location = 'taches.php?projet='.$idProjet;
+        header('Location: '.$location);
+        exit();
+    }
 }
 ?>
 
@@ -70,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <link rel="stylesheet" href="jquery-ui-bootstrap-jquery-ui-bootstrap-71f2e47/css/custom-theme/jquery-ui-1.9.2.custom.css">
 
         <script src="js/jquery-3.7.1.min.js"></script>
-        <script src="bootstrap-5.0.2-dist/js/bootstrap.js"></script>
+        <script src="bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
         <script src="jquery-ui-bootstrap-jquery-ui-bootstrap-71f2e47/js/jquery-ui-1.9.2.custom.min.js"></script>
         <script>
             $(function(){
